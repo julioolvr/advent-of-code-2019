@@ -11,7 +11,10 @@ end
 # Builds an endless enumerator where each element is the result of calling the previous
 # element with the given block. A starting value is required, and the first enumerated
 # value is the result of calling the block with the given starting value.
-def enumerator_from(starting_value)
+# This is similar to Enumerator#produce from Ruby 2.7, but skipping the first value.
+def enumerator_from(starting_value, &block)
+  return Enumerator.produce((yield starting_value), &block) if Enumerator.respond_to?(:produce)
+
   Enumerator.new do |y|
     last = starting_value
     loop { y << (last = yield last) }

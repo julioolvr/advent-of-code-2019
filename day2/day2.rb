@@ -15,7 +15,8 @@ noun, verb = 100.times do |noun|
     test_program = program.clone
     test_program[1] = noun
     test_program[2] = verb
-    computer.execute(test_program).first == EXPECTED_OUTPUT
+    computer.execute(test_program)
+    computer.memory.first == EXPECTED_OUTPUT
   end
 
   break noun, verb unless verb.nil?

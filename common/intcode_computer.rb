@@ -19,23 +19,30 @@ class IntcodeComputer
     @memory = program
     output = []
 
-    until program[@instruction_pointer] == OPCODE_STOP
-      case program[@instruction_pointer]
+    loop do
+      opcode = program[@instruction_pointer] % 100
+      first_mode = program[@instruction_pointer] / 100 % 10
+      second_mode = program[@instruction_pointer] / 1_000 % 10
+      third_mode = program[@instruction_pointer] / 10_000 % 10
+
+      case opcode
       when OPCODE_ADD
-        result = program[program[@instruction_pointer + 1]] + program[program[@instruction_pointer + 2]]
-        program[program[@instruction_pointer + 3]] = result
+        result = read_value(program[@instruction_pointer + 1], mode: first_mode) + read_value(program[@instruction_pointer + 2], mode: second_mode)
+        write_value(program[@instruction_pointer + 3], result)
         @instruction_pointer += 4
       when OPCODE_MULTIPLY
-        result = program[program[@instruction_pointer + 1]] * program[program[@instruction_pointer + 2]]
-        program[program[@instruction_pointer + 3]] = result
+        result = read_value(program[@instruction_pointer + 1], mode: first_mode) * read_value(program[@instruction_pointer + 2], mode: second_mode)
+        write_value(program[@instruction_pointer + 3], result)
         @instruction_pointer += 4
       when OPCODE_READ_INPUT
         value = next_input
-        program[program[@instruction_pointer + 1]] = value
+        write_value(program[@instruction_pointer + 1], value)
         @instruction_pointer += 2
       when OPCODE_OUTPUT
-        output << program[program[@instruction_pointer + 1]]
+        output << read_value(program[@instruction_pointer + 1], mode: first_mode)
         @instruction_pointer += 2
+      when OPCODE_STOP
+        break
       else
         raise "Invalid opcode #{program[@instruction_pointer]}"
       end
@@ -52,5 +59,13 @@ class IntcodeComputer
 
     def next_input
       @input.next
+    end
+
+    def read_value(value, mode: 0)
+      mode == 0 ? @memory[value] : value
+    end
+
+    def write_value(position, value)
+      @memory[position] = value
     end
 end

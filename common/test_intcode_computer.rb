@@ -22,6 +22,10 @@ TEST_PROGRAMS = [
     program: [3,0,4,0,99],
     inputs: [42],
     expected_output: [42],
+  },
+  {
+    program: [1002,4,3,4,33],
+    expected_memory: [1002,4,3,4,99]
   }
 ]
 

@@ -26,7 +26,57 @@ TEST_PROGRAMS = [
   {
     program: [1002,4,3,4,33],
     expected_memory: [1002,4,3,4,99]
-  }
+  },
+  {
+    program: [3,9,8,9,10,9,4,9,99,-1,8],
+    inputs: [8],
+    expected_output: [1]
+  },
+  {
+    program: [3,9,8,9,10,9,4,9,99,-1,8],
+    inputs: [7],
+    expected_output: [0]
+  },
+  {
+    program: [3,9,7,9,10,9,4,9,99,-1,8],
+    inputs: [7],
+    expected_output: [1]
+  },
+  {
+    program: [3,9,7,9,10,9,4,9,99,-1,8],
+    inputs: [9],
+    expected_output: [0]
+  },
+  {
+    program: [3,3,1108,-1,8,3,4,3,99],
+    inputs: [8],
+    expected_output: [1]
+  },
+  {
+    program: [3,3,1108,-1,8,3,4,3,99],
+    inputs: [7],
+    expected_output: [0]
+  },
+  {
+    program: [3,3,1107,-1,8,3,4,3,99],
+    inputs: [7],
+    expected_output: [1]
+  },
+  {
+    program: [3,3,1107,-1,8,3,4,3,99],
+    inputs: [9],
+    expected_output: [0]
+  },
+  {
+    program: [3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9],
+    inputs: [0],
+    expected_output: [0]
+  },
+  {
+    program: [3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9],
+    inputs: [7],
+    expected_output: [1]
+  },
 ]
 
 class TestIntcodeComputer < Minitest::Test

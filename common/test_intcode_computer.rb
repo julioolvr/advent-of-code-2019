@@ -86,11 +86,10 @@ class TestIntcodeComputer < Minitest::Test
 
   TEST_PROGRAMS.each_with_index do |definition, i|
     define_method("test_program_#{i}") do
-      if definition.key?(:inputs)
-        @computer.prepare_input(definition[:inputs])
-      end
+      output, execution = @computer.execute(definition[:program])
+      execution.resume
 
-      output = @computer.execute(definition[:program])
+      definition.fetch(:inputs, []).each { |input| execution.resume(input) }
 
       if definition.key?(:expected_memory)
         assert_equal definition[:expected_memory], @computer.memory

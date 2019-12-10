@@ -5,4 +5,10 @@ computer = IntcodeComputer.new
 output, execution = computer.execute(program)
 execution.resume
 execution.resume(1)
-puts output
+puts "Part 1: #{output.last}"
+
+computer.reset
+output, execution = computer.execute(program)
+execution.resume
+execution.resume(2)
+puts "Part 2: #{output.last}"

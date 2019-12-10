@@ -77,6 +77,23 @@ TEST_PROGRAMS = [
     inputs: [7],
     expected_output: [1]
   },
+  {
+    program: [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99],
+    expected_output: [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]
+  },
+  {
+    program: [1102,34915192,34915192,7,4,7,99,0],
+    expected_output: [1219070632396864]
+  },
+  {
+    program: [104,1125899906842624,99],
+    expected_output: [1125899906842624]
+  },
+  {
+    program: [109,3,203,-1,4,2,99],
+    inputs: [5],
+    expected_output: [5]
+  }
 ]
 
 class TestIntcodeComputer < Minitest::Test

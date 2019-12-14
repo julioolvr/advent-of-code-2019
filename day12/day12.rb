@@ -21,13 +21,13 @@ class Moon
   end
 
   def apply_gravity(other_moon)
-    [:x, :y, :z].each do |axis|
-      if position[axis] != other_moon.position[axis]
+    Vector.members
+      .reject { |axis| position[axis] == other_moon.position[axis] }
+      .each do |axis|
         first_moon, second_moon = [self, other_moon].sort_by { |moon| moon.position[axis] }
         first_moon.velocity[axis] += 1
         second_moon.velocity[axis] -= 1
       end
-    end
   end
 
   def move
@@ -51,10 +51,16 @@ end
 
 LINE_FORMAT = /x=(-?\d+).*y=(-?\d+).*z=(-?\d+)/
 
-moons = ARGF.each_line.map(&:chomp).map do |line|
-  x, y, z = line.match(LINE_FORMAT).captures.map(&:to_i)
-  Moon.new(Vector.new(x, y, z))
+input_file = ARGF.each_line.map(&:chomp)
+
+def build_moons(input_file)
+  input_file.map do |line|
+    x, y, z = line.match(LINE_FORMAT).captures.map(&:to_i)
+    Moon.new(Vector.new(x, y, z))
+  end
 end
+
+moons = build_moons(input_file)
 
 def apply_gravity(moons)
   moons.each_with_index do |moon, i|
@@ -69,4 +75,39 @@ end
   moons.each(&:move)
 end
 
-puts moons.sum(&:total_energy)
+puts "Part 1: #{moons.sum(&:total_energy)}"
+
+moons = build_moons(input_file)
+starting_x = moons.map { |moon| [moon.position.x, moon.velocity.x] }
+period_x = 0
+
+loop do
+  period_x += 1
+  apply_gravity(moons)
+  moons.each(&:move)
+  break if starting_x == moons.map { |moon| [moon.position.x, moon.velocity.x] }
+end
+
+moons = build_moons(input_file)
+starting_y = moons.map { |moon| [moon.position.y, moon.velocity.y] }
+period_y = 0
+
+loop do
+  period_y += 1
+  apply_gravity(moons)
+  moons.each(&:move)
+  break if starting_y == moons.map { |moon| [moon.position.y, moon.velocity.y] }
+end
+
+moons = build_moons(input_file)
+starting_z = moons.map { |moon| [moon.position.z, moon.velocity.z] }
+period_z = 0
+
+loop do
+  period_z += 1
+  apply_gravity(moons)
+  moons.each(&:move)
+  break if starting_z == moons.map { |moon| [moon.position.z, moon.velocity.z] }
+end
+
+puts "Part 2: #{[period_x, period_y, period_z].reduce(1, :lcm)}"
